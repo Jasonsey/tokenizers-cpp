@@ -1,4 +1,6 @@
 // A simple C wrapper of tokenzier library
+mod tiktoken;
+
 use serde_json::Value;
 use std::{collections::HashMap, str::FromStr};
 use tokenizers::models::bpe::BPE;
