@@ -49,6 +49,13 @@ class Tokenizer {
    */
   static std::unique_ptr<Tokenizer> FromBlobJSON(const std::string& json_blob);
   /*!
+  * \brief Create Tiktoken tokenizer from a single in-memory json blob.
+  *
+  * \param json_blob The json blob.
+  * \return The created tokenzier.
+  */
+  static std::unique_ptr<Tokenizer> FromTiktoken(const std::string& json_blob);
+  /*!
    * \brief Create BPE tokenizer
    *
    * \param vocab_blob The blob that contains vocabs.

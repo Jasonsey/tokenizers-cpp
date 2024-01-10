@@ -34,6 +34,23 @@ void tokenizers_get_encode_ids(TokenizerHandle handle, const uint32_t** id_data,
 
 void tokenizers_free(TokenizerHandle handle);
 
+typedef void* TiktokenHandle;
+
+TiktokenHandle tiktoken_new_from_str(const char* json, size_t len);
+
+void tiktoken_encode(
+  TiktokenHandle handle,
+  const char* input_cstr, size_t input_cstr_len,
+  const char* allowed_special, size_t allowed_special_len,
+  const uint32_t** out_data, size_t* out_len);
+
+void tiktoken_decode(
+  TiktokenHandle handle,
+  const uint32_t* input_ids, size_t input_len,
+  const char** out_cstr, size_t* out_len);
+
+void tiktoken_free(TiktokenHandle handle);
+
 #ifdef __cplusplus
 }
 #endif

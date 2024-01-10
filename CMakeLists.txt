@@ -107,6 +107,7 @@ set(
   src/sentencepiece_tokenizer.cc
   src/huggingface_tokenizer.cc
   src/rwkv_world_tokenizer.cc
+  src/tiktoken_tokenizer.cc
 )
 add_library(tokenizer_cpp_objs OBJECT ${TOKENIZER_CPP_SRCS})
 target_include_directories(tokenizer_cpp_objs PRIVATE sentencepiece/src)

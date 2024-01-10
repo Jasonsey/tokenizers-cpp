@@ -62,12 +62,12 @@ extern "system" fn tiktoken_encode(
 extern "system" fn tiktoken_decode(
     handle: *mut CoreBPE,
     input_ids: *const u32,
-    len: usize,
+    input_len: usize,
     out_cstr: *mut *mut u8,
     out_len: *mut usize,
 ) {
     unsafe {
-        let input_data = std::slice::from_raw_parts(input_ids, len)
+        let input_data = std::slice::from_raw_parts(input_ids, input_len)
             .iter()
             .map(|x| *x as usize)
             .collect();
