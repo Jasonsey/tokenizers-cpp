@@ -1,14 +1,15 @@
 use std::collections::HashSet;
+use base64::Engine;
+use base64::prelude::BASE64_STANDARD;
 use bstr::ByteVec;
 use rustc_hash::FxHashMap as HashMap;
 use serde::{Deserialize, Serialize};
-use serde_json;
 use super::core_bpe::CoreBPE;
 
 #[derive(Serialize, Deserialize)]
 struct TiktokenJson {
     name: String,
-    mergeable_ranks: HashMap<Vec<u8>, usize>,
+    mergeable_ranks: HashMap<String, usize>,
     special_tokens: HashMap<String, usize>,
     pat_str: Option<String>,
 }
@@ -18,8 +19,16 @@ extern "system" fn tiktoken_new_from_str(input_cstr: *const u8, len: usize) -> *
     unsafe {
         let json = std::str::from_utf8(std::slice::from_raw_parts(input_cstr, len)).unwrap();
         let tiktoken_json: TiktokenJson = serde_json::from_str(json).expect("parse json failed");
+        let mergeable_ranks: HashMap<Vec<u8>, usize> = tiktoken_json
+            .mergeable_ranks
+            .iter()
+            .map(
+                |(key, value)|
+                (BASE64_STANDARD.decode(key.as_bytes()).expect("decode vocab error"), value.to_owned())
+            )
+            .collect();
         let core_bpe = CoreBPE::new(
-            tiktoken_json.mergeable_ranks,
+            mergeable_ranks,
             tiktoken_json.special_tokens,
             tiktoken_json.pat_str.unwrap_or(
                 r#"(?i:'s|'t|'re|'ve|'m|'ll|'d)|[^\r\n\p{L}\p{N}]?\p{L}+|\p{N}{1,3}| ?[^\s\p{L}\p{N}]+[\r\n]*|\s*[\r\n]+|\s+(?!\S)|\s+"#.to_string()
