@@ -24,7 +24,7 @@ extern "system" fn tiktoken_new_from_str(input_cstr: *const u8, len: usize) -> *
             .iter()
             .map(
                 |(key, value)|
-                (BASE64_STANDARD.decode(key.as_bytes()).expect("decode vocab error"), value.to_owned())
+                (BASE64_STANDARD.decode(key).unwrap(), value.to_owned())
             )
             .collect();
         let core_bpe = CoreBPE::new(
